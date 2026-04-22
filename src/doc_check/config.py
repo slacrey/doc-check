@@ -34,16 +34,30 @@ def _parse_identity_headers(raw_value: str | None) -> tuple[str, ...]:
     return headers or DEFAULT_IDENTITY_HEADERS
 
 
+def _parse_admin_users(raw_value: str | None) -> tuple[str, ...]:
+    if raw_value is None:
+        return ()
+
+    users = tuple(
+        part.strip().lower()
+        for part in raw_value.split(",")
+        if part.strip()
+    )
+    return users
+
+
 @dataclass(frozen=True, slots=True)
 class AppConfig:
     workspace_dir: Path
     data_dir: Path
     artifacts_dir: Path
+    rule_drafts_dir: Path
     database_path: Path
     rulesets_dir: Path
     templates_dir: Path
     retention_days: int
     identity_headers: tuple[str, ...]
+    admin_user_ids: tuple[str, ...]
     local_user_id: str
     max_upload_bytes: int
 
@@ -68,6 +82,11 @@ class AppConfig:
             cwd=workspace_dir,
             default=data_dir / "artifacts",
         )
+        rule_drafts_dir = _resolve_path(
+            env.get("DOC_CHECK_RULE_DRAFTS_DIR"),
+            cwd=workspace_dir,
+            default=data_dir / "rule-drafts",
+        )
         database_path = _resolve_path(
             env.get("DOC_CHECK_DB_PATH"),
             cwd=workspace_dir,
@@ -87,6 +106,11 @@ class AppConfig:
         max_upload_bytes = int(env.get("DOC_CHECK_MAX_UPLOAD_BYTES", str(20 * 1024 * 1024)))
         local_user_id = env.get("DOC_CHECK_LOCAL_USER_ID", "local")
         identity_headers = _parse_identity_headers(env.get("DOC_CHECK_IDENTITY_HEADERS"))
+        raw_admin_users = env.get("DOC_CHECK_ADMIN_USERS")
+        admin_user_ids = _parse_admin_users(raw_admin_users)
+        if raw_admin_users is None:
+            normalized_local_user_id = local_user_id.strip().lower()
+            admin_user_ids = (normalized_local_user_id,) if normalized_local_user_id else ()
 
         if retention_days <= 0:
             raise ValueError("DOC_CHECK_RETENTION_DAYS must be greater than zero")
@@ -97,11 +121,13 @@ class AppConfig:
             workspace_dir=workspace_dir,
             data_dir=data_dir,
             artifacts_dir=artifacts_dir,
+            rule_drafts_dir=rule_drafts_dir,
             database_path=database_path,
             rulesets_dir=rulesets_dir,
             templates_dir=templates_dir,
             retention_days=retention_days,
             identity_headers=identity_headers,
+            admin_user_ids=admin_user_ids,
             local_user_id=local_user_id,
             max_upload_bytes=max_upload_bytes,
         )
@@ -109,4 +135,5 @@ class AppConfig:
     def ensure_directories(self) -> None:
         self.data_dir.mkdir(parents=True, exist_ok=True)
         self.artifacts_dir.mkdir(parents=True, exist_ok=True)
+        self.rule_drafts_dir.mkdir(parents=True, exist_ok=True)
         self.database_path.parent.mkdir(parents=True, exist_ok=True)

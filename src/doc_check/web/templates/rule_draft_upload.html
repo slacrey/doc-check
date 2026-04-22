@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>AEOS 规则草案生成</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; margin: 2rem auto; max-width: 1080px; line-height: 1.5; color: #1f2937; }
+      a { color: #0f766e; }
+      .panel { border: 1px solid #d1d5db; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; background: #ffffff; }
+      .meta { color: #4b5563; font-size: 0.95rem; }
+      .message { padding: 0.75rem 1rem; border-radius: 10px; margin-bottom: 1rem; background: #ecfeff; color: #155e75; }
+      .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+      button { border: 0; border-radius: 10px; padding: 0.65rem 1rem; background: #0f766e; color: white; cursor: pointer; }
+      table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+      th, td { border-top: 1px solid #e5e7eb; padding: 0.75rem; text-align: left; vertical-align: top; }
+      th { font-size: 0.85rem; color: #4b5563; }
+      select { min-width: 220px; padding: 0.45rem 0.5rem; border-radius: 9px; border: 1px solid #d1d5db; background: #ffffff; }
+      code { font-size: 0.9rem; }
+    </style>
+  </head>
+  <body>
+    <p><a href="/">返回上传页</a></p>
+    <h1>AEOS 规则草案生成</h1>
+    <p class="meta">当前用户：${current_user}</p>
+    ${message_html}
+    <div class="panel">
+      <h2>创建草案任务</h2>
+      <p class="meta">第一版先创建空任务壳，后续在同一流程中继续接入规范文档、模板和样本文档上传。</p>
+      <form action="/rule-drafts" method="post">
+        <label for="ruleset_id">目标文种</label>
+        <div class="actions">
+          <select id="ruleset_id" name="ruleset_id">
+            <option value="aeos">AEOS 制度文件</option>
+          </select>
+          <button type="submit">创建草案任务</button>
+        </div>
+      </form>
+    </div>
+    <div class="panel">
+      <h2>已有草案任务</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>任务 ID</th>
+            <th>文种</th>
+            <th>状态</th>
+            <th>创建人</th>
+            <th>创建时间</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows_html}
+        </tbody>
+      </table>
+    </div>
+  </body>
+  </html>

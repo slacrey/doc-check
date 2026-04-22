@@ -33,6 +33,10 @@ def resolve_user_context(request: Request, config: AppConfig) -> UserContext:
     return UserContext.local(config.local_user_id)
 
 
+def is_admin_user(user: UserContext, config: AppConfig) -> bool:
+    return user.user_id.strip().lower() in set(config.admin_user_ids)
+
+
 @router.post("/checks", status_code=status.HTTP_201_CREATED)
 async def create_check(
     request: Request,

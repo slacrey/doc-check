@@ -13,6 +13,7 @@ def ensure_docx_samples(fixtures_dir: Path) -> dict[str, Path]:
     format_errors_path = fixtures_dir / "aeos-format-errors.docx"
     news_valid_path = fixtures_dir / "news-valid-sample.docx"
     news_errors_path = fixtures_dir / "news-format-errors.docx"
+    aeos_standard_path = fixtures_dir / "aeos-standard-rules.docx"
     speech_valid_path = fixtures_dir / "speech-valid-sample.docx"
     speech_errors_path = fixtures_dir / "speech-format-errors.docx"
     speech_salutation_errors_path = fixtures_dir / "speech-salutation-errors.docx"
@@ -22,6 +23,7 @@ def ensure_docx_samples(fixtures_dir: Path) -> dict[str, Path]:
     _build_format_error_sample(format_errors_path)
     _build_news_valid_sample(news_valid_path)
     _build_news_error_sample(news_errors_path)
+    _build_aeos_standard_sample(aeos_standard_path)
     _build_speech_valid_sample(speech_valid_path)
     _build_speech_error_sample(speech_errors_path)
     _build_speech_salutation_error_sample(speech_salutation_errors_path)
@@ -32,6 +34,7 @@ def ensure_docx_samples(fixtures_dir: Path) -> dict[str, Path]:
         "format_errors": format_errors_path,
         "news_valid": news_valid_path,
         "news_errors": news_errors_path,
+        "aeos_standard": aeos_standard_path,
         "speech_valid": speech_valid_path,
         "speech_errors": speech_errors_path,
         "speech_salutation_errors": speech_salutation_errors_path,
@@ -111,6 +114,22 @@ def _build_news_error_sample(path: Path) -> None:
     document.add_paragraph("史上最强！公司培训炸裂来袭！全员直呼太震撼了！")
     document.add_paragraph("2026/04/22，公司开展活动，网传效果非常震撼，实现绝对安全。")
     document.add_paragraph("活动现场气氛热烈，大家反响强烈。")
+    document.save(path)
+
+
+def _build_aeos_standard_sample(path: Path) -> None:
+    document = Document()
+    _apply_gbt_9704_layout(document)
+    body_style = _ensure_paragraph_style(
+        document,
+        "AEOS Standard Body",
+        font_name="仿宋_GB2312",
+        font_size_pt=16,
+    )
+
+    document.add_paragraph("AEOS 制度文件编写规范", style="Heading 1")
+    document.add_paragraph("正文统一使用“网络与信息安全”，不要使用“网络安全”。", style=body_style.name)
+    document.add_paragraph("制度文件中不得使用“黑名单”表述。", style=body_style.name)
     document.save(path)
 
 

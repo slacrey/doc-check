@@ -15,6 +15,7 @@ def test_from_env_uses_workspace_relative_defaults(tmp_path):
     assert config.rulesets_dir == (tmp_path / "rulesets").resolve()
     assert config.templates_dir == (tmp_path / "src" / "doc_check" / "web" / "templates").resolve()
     assert config.identity_headers[0] == "x-forwarded-user"
+    assert config.admin_user_ids == ("local",)
     assert config.retention_days == 7
 
 
@@ -43,6 +44,19 @@ def test_from_env_applies_overrides_and_normalizes_headers(tmp_path):
     assert config.max_upload_bytes == 2048
     assert config.local_user_id == "review-bot"
     assert config.identity_headers == ("x-remote-user", "x-forwarded-email")
+    assert config.admin_user_ids == ("review-bot",)
+
+
+def test_from_env_respects_explicit_admin_users_over_local_default(tmp_path):
+    config = AppConfig.from_env(
+        {
+            "DOC_CHECK_LOCAL_USER_ID": "review-bot",
+            "DOC_CHECK_ADMIN_USERS": "admin@example.com, ops@example.com",
+        },
+        cwd=tmp_path,
+    )
+
+    assert config.admin_user_ids == ("admin@example.com", "ops@example.com")
 
 
 def test_ensure_directories_creates_expected_paths(tmp_path):

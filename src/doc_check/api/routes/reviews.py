@@ -9,6 +9,7 @@ from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from doc_check.api.routes.checks import (
     get_app_config,
     get_execution_service,
+    is_admin_user,
     resolve_user_context,
 )
 from doc_check.config import AppConfig
@@ -43,12 +44,24 @@ async def upload_page(
     request: Request,
     config: AppConfig = Depends(get_app_config),
 ) -> HTMLResponse:
+    user = resolve_user_context(request, config)
     cleanup_count = request.query_params.get("cleanup_count")
     message_html = ""
     if cleanup_count is not None:
         message_html = (
             f'<div class="message">已清理 {escape(cleanup_count)} 个过期工件。</div>'
         )
+    management_panel_html = ""
+    if is_admin_user(user, config):
+        management_panel_html = """
+    <div class="panel">
+      <h2>管理入口</h2>
+      <p class="meta">规则维护人可在此创建 AEOS 规则草案任务，后续再上传规范、模板和样本文档。</p>
+      <div class="actions">
+        <a href="/rule-drafts">规则草案生成</a>
+      </div>
+    </div>
+        """
 
     guide_links_html = "\n".join(
         f'<li><a href="/rules/{escape(guide.ruleset_id)}">{escape(guide.document_type)}规则说明</a></li>'
@@ -60,6 +73,7 @@ async def upload_page(
         "upload.html",
         message_html=message_html,
         guide_links_html=guide_links_html,
+        management_panel_html=management_panel_html,
     )
     return HTMLResponse(html)
 

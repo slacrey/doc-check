@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>规则草案任务 - ${task_id}</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; margin: 2rem auto; max-width: 1080px; line-height: 1.5; color: #1f2937; }
+      a { color: #0f766e; }
+      .panel { border: 1px solid #d1d5db; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; background: #ffffff; }
+      .meta { color: #4b5563; font-size: 0.95rem; }
+      .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; align-items: center; }
+      button { border: 0; border-radius: 10px; padding: 0.65rem 1rem; background: #0f766e; color: white; cursor: pointer; }
+      select { min-width: 180px; padding: 0.45rem 0.5rem; border-radius: 9px; border: 1px solid #d1d5db; background: #ffffff; }
+      input[type="file"] { display: block; margin-top: 0.75rem; }
+      table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+      th, td { border-top: 1px solid #e5e7eb; padding: 0.75rem; text-align: left; vertical-align: top; }
+      th { font-size: 0.85rem; color: #4b5563; }
+      code { font-size: 0.9rem; }
+      .badge.latest { display: inline-block; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.8rem; background: #ecfeff; color: #155e75; }
+    </style>
+  </head>
+  <body>
+    <p><a href="/">返回上传页</a> / <a href="/rule-drafts">返回草案任务列表</a></p>
+    <div class="panel">
+      <h1>规则草案任务</h1>
+      <p class="meta">任务 ID：${task_id}</p>
+      <p class="meta">文种：${ruleset_id}</p>
+      <p class="meta">状态：${status_label}</p>
+      <p class="meta">创建人：${created_by}</p>
+      <p class="meta">创建时间：${created_at}</p>
+    </div>
+    <div class="panel">
+      <h2>上传来源文件</h2>
+      <form action="/rule-drafts/${task_id}/sources" method="post" enctype="multipart/form-data">
+        <label for="source_type">来源类型</label>
+        <div class="actions">
+          <select id="source_type" name="source_type">
+            <option value="standard">正式规范</option>
+            <option value="template">标准模板</option>
+            <option value="sample">样本文档</option>
+          </select>
+        </div>
+        <label for="file">选择 `.docx` 来源文件</label>
+        <input id="file" name="file" type="file" accept=".docx" required />
+        <div class="actions">
+          <button type="submit">上传并规范化</button>
+        </div>
+      </form>
+      <form action="/rule-drafts/${task_id}/generate" method="post">
+        <div class="actions">
+          <button type="submit">生成草案规则包</button>
+        </div>
+      </form>
+    </div>
+    <div class="panel">
+      <h2>来源文件</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>来源 ID</th>
+            <th>文件名</th>
+            <th>类型</th>
+            <th>上传时间</th>
+            <th>参与状态</th>
+            <th>规范化状态</th>
+            <th>解析信息</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows_html}
+        </tbody>
+      </table>
+    </div>
+    <div class="panel">
+      <h2>已生成草案</h2>
+      ${generated_versions_html}
+    </div>
+  </body>
+  </html>
