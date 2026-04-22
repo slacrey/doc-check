@@ -1,0 +1,10 @@
+{
+  "ruleset_id": "aeos",
+  "version": "2026.04",
+  "name": "AEOS 制度文件标准化检验规则",
+  "document_type": "AEOS 制度文件",
+  "punctuation_rules": {
+    "detect_ascii_comma_in_cjk": true,
+    "detect_mixed_commas": true
+  }
+}

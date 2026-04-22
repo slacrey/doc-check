@@ -1,0 +1,2 @@
+rule_id,canonical,variant,severity,disposition,suggestion
+terminology.preferred.network-info-security,网络与信息安全,网络安全,error,mandatory,请统一使用“网络与信息安全”。

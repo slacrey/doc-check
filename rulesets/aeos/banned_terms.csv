@@ -1,0 +1,2 @@
+rule_id,term,severity,disposition,message,suggestion
+terminology.banned.blacklist,黑名单,warning,suggestion,文档中存在不建议直接使用的表述“黑名单”。,请改为“阻止名单”或更具体的业务表述。

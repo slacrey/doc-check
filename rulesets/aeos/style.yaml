@@ -1,0 +1,49 @@
+{
+  "paragraph_rules": [
+    {
+      "rule_id": "style.aeos-body.line-spacing",
+      "applies_to_style": "AEOS Body",
+      "field": "line_spacing",
+      "expected": 1.5,
+      "severity": "error",
+      "disposition": "mandatory",
+      "message": "AEOS 正文段落应使用 1.5 倍行距。"
+    },
+    {
+      "rule_id": "style.aeos-body.space-after",
+      "applies_to_style": "AEOS Body",
+      "field": "space_after_pt",
+      "expected": 6.0,
+      "severity": "warning",
+      "disposition": "mandatory",
+      "message": "AEOS 正文段落段后距应保持 6pt。"
+    },
+    {
+      "rule_id": "style.aeos-body.left-indent",
+      "applies_to_style": "AEOS Body",
+      "field": "left_indent_pt",
+      "expected": 24.0,
+      "severity": "warning",
+      "disposition": "mandatory",
+      "message": "AEOS 正文段落左缩进应保持 24pt。"
+    },
+    {
+      "rule_id": "style.aeos-body.font-name",
+      "applies_to_style": "AEOS Body",
+      "field": "font_name",
+      "expected": "SimSun",
+      "severity": "warning",
+      "disposition": "mandatory",
+      "message": "AEOS 正文字体应统一为 SimSun。"
+    },
+    {
+      "rule_id": "style.aeos-body.font-size",
+      "applies_to_style": "AEOS Body",
+      "field": "font_size_pt",
+      "expected": 12.0,
+      "severity": "warning",
+      "disposition": "mandatory",
+      "message": "AEOS 正文字号应统一为 12pt。"
+    }
+  ]
+}

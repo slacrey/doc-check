@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>检验结果 - ${artifact_id}</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; margin: 2rem auto; max-width: 1120px; line-height: 1.5; color: #1f2937; }
+      a { color: #0f766e; }
+      .panel { border: 1px solid #d1d5db; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; background: #ffffff; }
+      .metrics { display: flex; gap: 1rem; flex-wrap: wrap; }
+      .metric { background: #f8fafc; border-radius: 10px; padding: 0.75rem 1rem; min-width: 140px; }
+      .metric strong { display: block; font-size: 1.4rem; }
+      table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+      th, td { border-top: 1px solid #e5e7eb; padding: 0.75rem; text-align: left; vertical-align: top; }
+      th { font-size: 0.85rem; color: #4b5563; }
+      .badge { display: inline-block; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.8rem; }
+      .badge.error { background: #fee2e2; color: #991b1b; }
+      .badge.warning { background: #fef3c7; color: #92400e; }
+      .badge.info { background: #dbeafe; color: #1d4ed8; }
+      .badge.open { background: #dcfce7; color: #166534; }
+      .badge.false_positive { background: #ede9fe; color: #6d28d9; }
+      .badge.acceptable_exception { background: #f3f4f6; color: #374151; }
+      .actions form { display: inline-block; margin-right: 0.35rem; margin-top: 0.35rem; }
+      button { border: 0; border-radius: 9px; padding: 0.45rem 0.7rem; background: #0f766e; color: white; cursor: pointer; }
+      button.secondary { background: #4b5563; }
+      button.ghost { background: #9ca3af; }
+      .meta { color: #4b5563; font-size: 0.95rem; }
+    </style>
+  </head>
+  <body>
+    <p><a href="/">返回上传页</a></p>
+    <div class="panel">
+      <h1>检验结果</h1>
+      <p class="meta">工件 ID：${artifact_id}</p>
+      <p class="meta">文件：${original_filename}</p>
+      <p class="meta">规则包：${ruleset_id} / ${ruleset_version}</p>
+      <p class="meta">状态：${artifact_status}</p>
+      <p><a href="/reviews/${artifact_id}/annotated">下载批注版文档</a></p>
+    </div>
+    <div class="panel">
+      <div class="metrics">
+        <div class="metric"><span>总问题数</span><strong>${total_findings}</strong></div>
+        <div class="metric"><span>待处理</span><strong>${pending_count}</strong></div>
+        <div class="metric"><span>已标误报</span><strong>${false_positive_count}</strong></div>
+        <div class="metric"><span>可接受例外</span><strong>${acceptable_exception_count}</strong></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>问题清单</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>类型</th>
+            <th>位置</th>
+            <th>问题</th>
+            <th>建议</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows_html}
+        </tbody>
+      </table>
+    </div>
+  </body>
+  </html>

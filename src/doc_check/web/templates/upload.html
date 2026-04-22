@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>AEOS 文档标准化检验</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; margin: 2rem auto; max-width: 920px; line-height: 1.5; color: #1f2937; }
+      h1, h2 { margin-bottom: 0.5rem; }
+      .panel { border: 1px solid #d1d5db; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; background: #ffffff; }
+      .meta { color: #4b5563; font-size: 0.95rem; }
+      .actions { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+      button { border: 0; border-radius: 10px; padding: 0.65rem 1rem; background: #0f766e; color: white; cursor: pointer; }
+      button.secondary { background: #374151; }
+      input[type="file"] { display: block; margin: 0.75rem 0; }
+      .message { padding: 0.75rem 1rem; border-radius: 10px; margin-bottom: 1rem; background: #ecfeff; color: #155e75; }
+      ul { margin-top: 0.5rem; }
+    </style>
+  </head>
+  <body>
+    <h1>AEOS 文档标准化检验</h1>
+    <p class="meta">首期仅支持 AEOS 制度文件 `.docx`，输出批注版文档和结构化摘要。</p>
+    ${message_html}
+    <div class="panel">
+      <h2>上传并检验</h2>
+      <form action="/reviews/upload" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="ruleset_id" value="aeos" />
+        <input type="hidden" name="ruleset_version" value="2026.04" />
+        <label for="file">选择待检文档</label>
+        <input id="file" name="file" type="file" accept=".docx" required />
+        <div class="actions">
+          <button type="submit">开始检验</button>
+        </div>
+      </form>
+    </div>
+    <div class="panel">
+      <h2>当前规则范围</h2>
+      <ul>
+        <li>格式检查：标题层级、目录、行距、段后距、缩进、字体字号</li>
+        <li>内容检查：术语规范、禁用词、标点混用</li>
+        <li>结果输出：结构化摘要 + 批注版 `.docx`</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h2>维护操作</h2>
+      <form action="/maintenance/cleanup" method="post">
+        <button type="submit" class="secondary">清理已过期工件</button>
+      </form>
+    </div>
+  </body>
+  </html>

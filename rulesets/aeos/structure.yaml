@@ -1,0 +1,41 @@
+{
+  "required_headings": [
+    {
+      "rule_id": "structure.required-heading.general",
+      "text": "1 总则",
+      "level": 1,
+      "severity": "error",
+      "disposition": "mandatory"
+    },
+    {
+      "rule_id": "structure.required-heading.purpose",
+      "text": "1.1 目的",
+      "level": 2,
+      "severity": "error",
+      "disposition": "mandatory"
+    }
+  ],
+  "toc": {
+    "rule_id": "structure.toc.required",
+    "required": true,
+    "match_headings": true,
+    "severity": "error",
+    "disposition": "mandatory"
+  },
+  "story_text_rules": [
+    {
+      "rule_id": "structure.header.expected-text",
+      "story_type": "header",
+      "expected_contains": "AEOS 文件页眉",
+      "severity": "warning",
+      "disposition": "mandatory"
+    },
+    {
+      "rule_id": "structure.footer.expected-text",
+      "story_type": "footer",
+      "expected_contains": "AEOS 文件页脚",
+      "severity": "warning",
+      "disposition": "mandatory"
+    }
+  ]
+}
