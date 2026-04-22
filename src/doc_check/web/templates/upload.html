@@ -2,7 +2,7 @@
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <title>AEOS 文档标准化检验</title>
+    <title>文档标准化检验</title>
     <style>
       body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; margin: 2rem auto; max-width: 920px; line-height: 1.5; color: #1f2937; }
       h1, h2 { margin-bottom: 0.5rem; }
@@ -17,27 +17,38 @@
     </style>
   </head>
   <body>
-    <h1>AEOS 文档标准化检验</h1>
-    <p class="meta">首期仅支持 AEOS 制度文件 `.docx`，输出批注版文档和结构化摘要。</p>
+    <h1>文档标准化检验</h1>
+    <p class="meta">当前支持 AEOS 制度文件、新闻宣传稿、发言稿 `.docx`，输出批注版文档和结构化摘要。</p>
     ${message_html}
     <div class="panel">
       <h2>上传并检验</h2>
       <form action="/reviews/upload" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="ruleset_id" value="aeos" />
-        <input type="hidden" name="ruleset_version" value="2026.04" />
+        <label for="ruleset_id">选择文种</label>
+        <select id="ruleset_id" name="ruleset_id">
+          <option value="aeos">AEOS 制度文件</option>
+          <option value="news_publicity">新闻宣传稿</option>
+          <option value="speech">发言稿</option>
+        </select>
+        <input type="hidden" name="ruleset_version" value="2026.05" />
         <label for="file">选择待检文档</label>
         <input id="file" name="file" type="file" accept=".docx" required />
         <div class="actions">
           <button type="submit">开始检验</button>
+          <a href="/rules">查看规则说明</a>
         </div>
       </form>
     </div>
     <div class="panel">
       <h2>当前规则范围</h2>
       <ul>
-        <li>格式检查：标题层级、目录、行距、段后距、缩进、字体字号</li>
-        <li>内容检查：术语规范、禁用词、标点混用</li>
+        <li>国标基线：A4 版式、页边距、正文 3 号仿宋、中文标点规范</li>
+        <li>AEOS 规则：章节完整性、目录一致性、术语规范、禁用词</li>
+        <li>新闻宣传稿：来源/日期、标题标点、标题党与未经核实表述</li>
+        <li>发言稿：标题文种、称谓、新闻稿式来源、网络化表达</li>
         <li>结果输出：结构化摘要 + 批注版 `.docx`</li>
+      </ul>
+      <ul>
+        ${guide_links_html}
       </ul>
     </div>
     <div class="panel">

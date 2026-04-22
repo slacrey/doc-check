@@ -27,8 +27,8 @@ def test_comment_writer_writes_comments_only_for_commentable_findings(tmp_path):
 
     assert output_path.exists()
     assert len(annotated.comments) == result.commented_count
-    assert result.commented_count == 5
-    assert result.summary_only_count == 4
+    assert result.commented_count == 9
+    assert result.summary_only_count == 8
     assert result.skipped_count == 0
-    assert any("AEOS 正文段落应使用 1.5 倍行距。" in comment.text for comment in annotated.comments)
+    assert any("正文宜统一使用 3 号仿宋体。" in comment.text for comment in annotated.comments)
     assert all("页眉" not in comment.text for comment in annotated.comments)

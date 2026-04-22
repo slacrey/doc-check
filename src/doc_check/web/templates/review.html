@@ -25,6 +25,10 @@
       button.secondary { background: #4b5563; }
       button.ghost { background: #9ca3af; }
       .meta { color: #4b5563; font-size: 0.95rem; }
+      .filters { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: end; }
+      .filters label { display: grid; gap: 0.3rem; color: #4b5563; font-size: 0.95rem; }
+      .filters select { min-width: 160px; padding: 0.45rem 0.5rem; border-radius: 9px; border: 1px solid #d1d5db; background: #ffffff; }
+      .filter-actions { margin-top: 0.8rem; display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
     </style>
   </head>
   <body>
@@ -36,10 +40,12 @@
       <p class="meta">规则包：${ruleset_id} / ${ruleset_version}</p>
       <p class="meta">状态：${artifact_status}</p>
       <p><a href="/reviews/${artifact_id}/annotated">下载批注版文档</a></p>
+      <p><a href="${ruleset_guide_path}">查看该文种规则说明</a></p>
     </div>
     <div class="panel">
       <div class="metrics">
         <div class="metric"><span>总问题数</span><strong>${total_findings}</strong></div>
+        <div class="metric"><span>当前显示</span><strong>${filtered_findings}</strong></div>
         <div class="metric"><span>待处理</span><strong>${pending_count}</strong></div>
         <div class="metric"><span>已标误报</span><strong>${false_positive_count}</strong></div>
         <div class="metric"><span>可接受例外</span><strong>${acceptable_exception_count}</strong></div>
@@ -47,6 +53,10 @@
     </div>
     <div class="panel">
       <h2>问题清单</h2>
+      ${filter_form_html}
+      <div class="filter-actions">
+        <a href="${clear_filters_path}">清除筛选</a>
+      </div>
       <table>
         <thead>
           <tr>

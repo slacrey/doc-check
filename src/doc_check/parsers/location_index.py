@@ -99,6 +99,10 @@ def _resolve_run_bounds(paragraph: ParagraphNode) -> tuple[int | None, int | Non
         if run.text.strip() or run.contains_break
     ]
     if not candidate_indexes:
+        # Word fields such as generated TOC entries can render paragraph text while exposing
+        # only empty runs through python-docx. Those runs are still valid comment anchors.
+        if paragraph.text.strip() and paragraph.runs:
+            return paragraph.runs[0].run_index, paragraph.runs[-1].run_index
         return None, None
     return candidate_indexes[0], candidate_indexes[-1]
 

@@ -31,9 +31,13 @@ def test_review_actions_update_pending_count_and_state_labels(tmp_path):
 
         updated = client.post(
             f"/reviews/{artifact_id}/findings/{finding_id}",
-            data={"review_status": "false_positive"},
+            data={
+                "review_status": "false_positive",
+                "filter_review_status": "false_positive",
+            },
         )
 
     assert updated.status_code == 200
-    assert ">8<" in updated.text
+    assert "当前显示</span><strong>1</strong>" in updated.text
     assert "false_positive" in updated.text
+    assert 'option value="false_positive" selected="selected"' in updated.text

@@ -8,7 +8,7 @@ from doc_check.rules.rule_pack import load_rule_pack
 from tests.support.docx_samples import ensure_docx_samples
 
 
-def test_structure_checks_flag_missing_sections_and_story_text(tmp_path):
+def test_structure_checks_flag_missing_sections_and_toc(tmp_path):
     fixture_paths = ensure_docx_samples(tmp_path)
     snapshot = read_docx_snapshot(fixture_paths["format_errors"])
     rule_pack = load_rule_pack(Path("rulesets/aeos"))
@@ -18,5 +18,3 @@ def test_structure_checks_flag_missing_sections_and_story_text(tmp_path):
 
     assert "structure.required-heading.purpose" in rule_ids
     assert "structure.toc.required" in rule_ids
-    assert "structure.header.expected-text" in rule_ids
-    assert "structure.footer.expected-text" in rule_ids

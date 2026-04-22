@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import re
+
 from doc_check.domain.documents import StoryType
-from doc_check.domain.rules import RuleFinding, RulePack, paragraph_location
+from doc_check.domain.rules import RuleFinding, RulePack, StyleRule, StyleRuleScope, paragraph_location
 from doc_check.domain.documents import DocumentSnapshot
 
 FLOAT_TOLERANCE = 0.01
+TOC_STYLE_PATTERN = re.compile(r"toc\s*\d*", re.IGNORECASE)
 
 
 def run_style_checks(snapshot: DocumentSnapshot, rule_pack: RulePack) -> list[RuleFinding]:
@@ -15,7 +18,7 @@ def run_style_checks(snapshot: DocumentSnapshot, rule_pack: RulePack) -> list[Ru
             continue
 
         for rule in rule_pack.style_rules:
-            if rule.applies_to_style not in paragraph.style_chain:
+            if not _paragraph_matches_rule(paragraph, rule):
                 continue
 
             actual_value, evidence = _resolve_style_field(paragraph, rule.field)
@@ -46,6 +49,25 @@ def run_style_checks(snapshot: DocumentSnapshot, rule_pack: RulePack) -> list[Ru
     return findings
 
 
+def _paragraph_matches_rule(paragraph, rule: StyleRule) -> bool:
+    if len(paragraph.text.strip()) < rule.min_text_length:
+        return False
+
+    if rule.scope is StyleRuleScope.STYLE_CHAIN:
+        return bool(rule.applies_to_style) and rule.applies_to_style in paragraph.style_chain
+
+    if rule.scope is StyleRuleScope.BODY_PARAGRAPH:
+        if paragraph.heading_level is not None:
+            return False
+        if TOC_STYLE_PATTERN.search(paragraph.style_name or ""):
+            return False
+        if "table[" in "/".join(paragraph.block_path):
+            return False
+        return paragraph.format.alignment != "center"
+
+    return False
+
+
 def _resolve_style_field(paragraph, field: str):
     if hasattr(paragraph.format, field):
         return getattr(paragraph.format, field), paragraph.text_excerpt
@@ -63,6 +85,8 @@ def _resolve_style_field(paragraph, field: str):
 
 
 def _matches_expected(actual_value, expected_value) -> bool:
+    if isinstance(expected_value, (list, tuple)):
+        return any(_matches_expected(actual_value, item) for item in expected_value)
     if isinstance(expected_value, (int, float)) and isinstance(actual_value, (int, float)):
         return abs(float(actual_value) - float(expected_value)) <= FLOAT_TOLERANCE
     return actual_value == expected_value

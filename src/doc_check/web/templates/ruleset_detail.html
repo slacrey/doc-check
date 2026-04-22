@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>${ruleset_name}</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; margin: 2rem auto; max-width: 1160px; line-height: 1.5; color: #1f2937; }
+      a { color: #0f766e; }
+      .panel { border: 1px solid #d1d5db; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; background: #ffffff; }
+      .metrics { display: flex; gap: 1rem; flex-wrap: wrap; }
+      .metric { background: #f8fafc; border-radius: 10px; padding: 0.75rem 1rem; min-width: 140px; }
+      .metric strong { display: block; font-size: 1.4rem; }
+      .meta { color: #4b5563; font-size: 0.95rem; }
+      .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.75rem; }
+      .chip { display: inline-block; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.8rem; background: #ecfeff; color: #155e75; }
+      .badge { display: inline-block; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.8rem; }
+      .badge.error { background: #fee2e2; color: #991b1b; }
+      .badge.warning { background: #fef3c7; color: #92400e; }
+      .badge.info { background: #dbeafe; color: #1d4ed8; }
+      .badge.mandatory { background: #dcfce7; color: #166534; }
+      .badge.suggestion { background: #f3f4f6; color: #374151; }
+      table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+      th, td { border-top: 1px solid #e5e7eb; padding: 0.75rem; text-align: left; vertical-align: top; }
+      th { font-size: 0.85rem; color: #4b5563; }
+      code { font-size: 0.9rem; }
+      ul { margin: 0.4rem 0 0; padding-left: 1.25rem; }
+    </style>
+  </head>
+  <body>
+    <p><a href="/">返回上传页</a> / <a href="/rules">返回规则总览</a></p>
+    <div class="panel">
+      <h1>${ruleset_name}</h1>
+      <p class="meta">文种：${document_type}</p>
+      <p class="meta">规则包版本：${ruleset_id} / ${ruleset_version}</p>
+      <div class="chips">${category_counts_html}</div>
+    </div>
+    <div class="panel">
+      <h2>规则依据与适用范围</h2>
+      <ul>
+        <li>${basis_summary}</li>
+        <li>${scope_summary}</li>
+        <li>${limitation_summary}</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="metrics">
+        <div class="metric"><span>规则总数</span><strong>${total_rules}</strong></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>规则明细</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>类别</th>
+            <th>适用范围</th>
+            <th>规则 ID</th>
+            <th>检查说明</th>
+            <th>建议</th>
+            <th>级别 / 要求</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows_html}
+        </tbody>
+      </table>
+    </div>
+  </body>
+  </html>

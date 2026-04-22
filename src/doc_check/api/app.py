@@ -8,6 +8,7 @@ from doc_check.api.routes.checks import router as checks_router
 from doc_check.api.routes.reviews import router as reviews_router
 from doc_check.config import AppConfig
 from doc_check.persistence.repositories import ArtifactRepository
+from doc_check.services.check_execution import CheckExecutionService
 from doc_check.services.check_pipeline import CheckPipelineService
 from doc_check.services.review_service import ReviewService
 
@@ -30,6 +31,10 @@ def build_app(config: AppConfig | None = None) -> FastAPI:
         app.state.review_service = ReviewService(
             config=app_config,
             repository=repository,
+        )
+        app.state.execution_service = CheckExecutionService(
+            check_service=app.state.check_service,
+            review_service=app.state.review_service,
         )
         yield
 

@@ -1,0 +1,13 @@
+{
+  "ruleset_id": "news_publicity",
+  "version": "2026.05",
+  "name": "新闻宣传稿检验规则",
+  "document_type": "新闻宣传稿",
+  "punctuation_rules": {
+    "detect_ascii_comma_in_cjk": true,
+    "detect_mixed_commas": true,
+    "detect_ascii_colon_in_cjk": true,
+    "detect_ascii_semicolon_in_cjk": true,
+    "detect_ascii_parentheses_in_cjk": true
+  }
+}

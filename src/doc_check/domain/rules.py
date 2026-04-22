@@ -21,6 +21,11 @@ class FindingDisposition(StrEnum):
     SUGGESTION = "suggestion"
 
 
+class StyleRuleScope(StrEnum):
+    STYLE_CHAIN = "style_chain"
+    BODY_PARAGRAPH = "body_paragraph"
+
+
 @dataclass(frozen=True, slots=True)
 class RuleManifest:
     ruleset_id: str
@@ -57,17 +62,82 @@ class TocRule:
     rule_id: str
 
 
+class ParagraphPatternMode(StrEnum):
+    REQUIRE_ANY = "require_any"
+    FORBID_ANY = "forbid_any"
+
+
+class ParagraphMetricKind(StrEnum):
+    TEXT_LENGTH = "text_length"
+    PATTERN_COUNT = "pattern_count"
+
+
+@dataclass(frozen=True, slots=True)
+class ParagraphPatternRule:
+    rule_id: str
+    pattern: str
+    mode: ParagraphPatternMode
+    severity: FindingSeverity
+    disposition: FindingDisposition
+    message: str
+    suggestion: str | None = None
+    first_n_paragraphs: int | None = None
+    last_n_paragraphs: int | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class ParagraphSignalRule:
+    rule_id: str
+    patterns: tuple[str, ...]
+    min_matches: int
+    severity: FindingSeverity
+    disposition: FindingDisposition
+    message: str
+    suggestion: str | None = None
+    first_n_paragraphs: int | None = None
+    last_n_paragraphs: int | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class ParagraphMetricRule:
+    rule_id: str
+    kind: ParagraphMetricKind
+    max_value: int
+    severity: FindingSeverity
+    disposition: FindingDisposition
+    message: str
+    suggestion: str | None = None
+    pattern: str | None = None
+    first_n_paragraphs: int | None = None
+    last_n_paragraphs: int | None = None
+
+
 @dataclass(frozen=True, slots=True)
 class StructureRules:
     required_headings: tuple[RequiredHeadingRule, ...]
     toc_rule: TocRule | None
     story_text_rules: tuple[StoryTextRule, ...]
+    paragraph_pattern_rules: tuple[ParagraphPatternRule, ...]
+    paragraph_signal_rules: tuple[ParagraphSignalRule, ...]
+    paragraph_metric_rules: tuple[ParagraphMetricRule, ...]
 
 
 @dataclass(frozen=True, slots=True)
 class StyleRule:
     rule_id: str
-    applies_to_style: str
+    scope: StyleRuleScope
+    field: str
+    expected: Any
+    severity: FindingSeverity
+    disposition: FindingDisposition
+    message: str
+    applies_to_style: str | None = None
+    min_text_length: int = 0
+
+
+@dataclass(frozen=True, slots=True)
+class LayoutRule:
+    rule_id: str
     field: str
     expected: Any
     severity: FindingSeverity
@@ -100,6 +170,7 @@ class RulePack:
     base_dir: Path
     manifest: RuleManifest
     structure_rules: StructureRules
+    layout_rules: tuple[LayoutRule, ...]
     style_rules: tuple[StyleRule, ...]
     preferred_terms: tuple[PreferredTermRule, ...]
     banned_terms: tuple[BannedTermRule, ...]

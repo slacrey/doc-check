@@ -1,0 +1,5 @@
+rule_id,term,severity,disposition,message,suggestion
+terminology.news.banned.unverified,网传,warning,suggestion,新闻宣传稿中不宜直接使用“网传”等未经核实表述。,建议改为经核实后的事实性表述。
+terminology.news.banned.clickbait-heavy,重磅,warning,suggestion,新闻宣传稿标题中不宜使用“重磅”等标题党表述。,建议改为客观、准确的事实性标题。
+terminology.news.banned.clickbait-explosive,炸裂,warning,suggestion,新闻宣传稿中不宜使用“炸裂”等夸张化表述。,建议改为客观描述实际效果或事实结果。
+terminology.news.banned.clickbait-screen,刷屏,warning,suggestion,新闻宣传稿中不宜使用“刷屏”等夸张化表述。,建议改为客观描述传播情况。

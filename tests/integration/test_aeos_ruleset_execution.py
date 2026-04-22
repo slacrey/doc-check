@@ -17,9 +17,9 @@ def test_aeos_rule_engine_runs_across_categories(tmp_path):
     error_evaluation = engine.evaluate(read_docx_snapshot(fixture_paths["format_errors"]), rule_pack)
 
     assert valid_evaluation.ruleset_id == "aeos"
-    assert valid_evaluation.ruleset_version == "2026.04"
+    assert valid_evaluation.ruleset_version == "2026.05"
     assert valid_evaluation.findings == ()
 
     categories = {finding.category for finding in error_evaluation.findings}
-    assert categories == {"structure", "style", "terminology", "punctuation"}
-    assert all(finding.ruleset_version == "2026.04" for finding in error_evaluation.findings)
+    assert categories == {"layout", "structure", "style", "terminology", "punctuation"}
+    assert all(finding.ruleset_version == "2026.05" for finding in error_evaluation.findings)

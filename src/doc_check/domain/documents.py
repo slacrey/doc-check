@@ -103,6 +103,17 @@ class ParagraphFormatSnapshot:
 
 
 @dataclass(frozen=True, slots=True)
+class SectionLayoutSnapshot:
+    section_index: int
+    page_width_mm: float | None
+    page_height_mm: float | None
+    top_margin_mm: float | None
+    bottom_margin_mm: float | None
+    left_margin_mm: float | None
+    right_margin_mm: float | None
+
+
+@dataclass(frozen=True, slots=True)
 class RunSnapshot:
     run_index: int
     text: str
@@ -188,6 +199,7 @@ class DocumentSnapshot:
     main_story: StorySnapshot
     headers: tuple[StorySnapshot, ...]
     footers: tuple[StorySnapshot, ...]
+    sections: tuple[SectionLayoutSnapshot, ...]
     toc_entries: tuple[TocEntry, ...]
     commentable_locations: tuple[LocationRef, ...] = ()
     summary_only_locations: tuple[LocationRef, ...] = ()

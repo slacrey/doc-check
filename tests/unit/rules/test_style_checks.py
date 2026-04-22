@@ -16,5 +16,5 @@ def test_style_checks_detect_nonstandard_paragraph_formatting(tmp_path):
     findings = run_style_checks(snapshot, rule_pack)
     rule_ids = {finding.rule_id for finding in findings}
 
-    assert "style.aeos-body.line-spacing" in rule_ids
-    assert "style.aeos-body.space-after" in rule_ids
+    assert "style.body.font-name" in rule_ids
+    assert "style.body.font-size" in rule_ids

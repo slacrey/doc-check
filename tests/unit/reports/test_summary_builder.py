@@ -23,11 +23,12 @@ def test_summary_builder_counts_findings_and_preserves_targets(tmp_path):
     assert report.ruleset_id == "aeos"
     assert report.total_findings == len(evaluation.findings)
     assert report.counts_by_category == {
+        "layout": 6,
         "punctuation": 1,
-        "structure": 4,
-        "style": 2,
+        "structure": 2,
+        "style": 6,
         "terminology": 2,
     }
-    assert report.counts_by_severity == {"error": 4, "warning": 5}
+    assert report.counts_by_severity == {"error": 5, "warning": 12}
     assert any(entry.target.value == "commentable" for entry in report.entries)
     assert any(entry.target.value == "summary_only" for entry in report.entries)

@@ -1,49 +1,74 @@
 {
   "paragraph_rules": [
     {
-      "rule_id": "style.aeos-body.line-spacing",
-      "applies_to_style": "AEOS Body",
-      "field": "line_spacing",
-      "expected": 1.5,
+      "rule_id": "style.body.font-name",
+      "scope": "body_paragraph",
+      "field": "font_name",
+      "expected": ["仿宋", "仿宋_GB2312", "FangSong"],
+      "severity": "warning",
+      "disposition": "mandatory",
+      "message": "正文宜统一使用 3 号仿宋体。",
+      "min_text_length": 8
+    },
+    {
+      "rule_id": "style.body.font-size",
+      "scope": "body_paragraph",
+      "field": "font_size_pt",
+      "expected": 16.0,
+      "severity": "warning",
+      "disposition": "mandatory",
+      "message": "正文宜统一使用 3 号字（约 16pt）。",
+      "min_text_length": 8
+    }
+  ],
+  "section_rules": [
+    {
+      "rule_id": "layout.page-width.a4",
+      "field": "page_width_mm",
+      "expected": 210.0,
       "severity": "error",
       "disposition": "mandatory",
-      "message": "AEOS 正文段落应使用 1.5 倍行距。"
+      "message": "页面宽度应符合 A4 纸规格（210mm）。"
     },
     {
-      "rule_id": "style.aeos-body.space-after",
-      "applies_to_style": "AEOS Body",
-      "field": "space_after_pt",
-      "expected": 6.0,
-      "severity": "warning",
+      "rule_id": "layout.page-height.a4",
+      "field": "page_height_mm",
+      "expected": 297.0,
+      "severity": "error",
       "disposition": "mandatory",
-      "message": "AEOS 正文段落段后距应保持 6pt。"
+      "message": "页面高度应符合 A4 纸规格（297mm）。"
     },
     {
-      "rule_id": "style.aeos-body.left-indent",
-      "applies_to_style": "AEOS Body",
-      "field": "left_indent_pt",
-      "expected": 24.0,
+      "rule_id": "layout.margin-top",
+      "field": "top_margin_mm",
+      "expected": 37.0,
       "severity": "warning",
       "disposition": "mandatory",
-      "message": "AEOS 正文段落左缩进应保持 24pt。"
+      "message": "上边距宜为 37mm。"
     },
     {
-      "rule_id": "style.aeos-body.font-name",
-      "applies_to_style": "AEOS Body",
-      "field": "font_name",
-      "expected": "SimSun",
+      "rule_id": "layout.margin-bottom",
+      "field": "bottom_margin_mm",
+      "expected": 35.0,
       "severity": "warning",
       "disposition": "mandatory",
-      "message": "AEOS 正文字体应统一为 SimSun。"
+      "message": "下边距宜为 35mm。"
     },
     {
-      "rule_id": "style.aeos-body.font-size",
-      "applies_to_style": "AEOS Body",
-      "field": "font_size_pt",
-      "expected": 12.0,
+      "rule_id": "layout.margin-left",
+      "field": "left_margin_mm",
+      "expected": 28.0,
       "severity": "warning",
       "disposition": "mandatory",
-      "message": "AEOS 正文字号应统一为 12pt。"
+      "message": "左边距宜为 28mm。"
+    },
+    {
+      "rule_id": "layout.margin-right",
+      "field": "right_margin_mm",
+      "expected": 26.0,
+      "severity": "warning",
+      "disposition": "mandatory",
+      "message": "右边距宜为 26mm。"
     }
   ]
 }

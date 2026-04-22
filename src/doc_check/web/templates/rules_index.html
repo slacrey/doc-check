@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>规则说明</title>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; margin: 2rem auto; max-width: 1080px; line-height: 1.5; color: #1f2937; }
+      a { color: #0f766e; }
+      .panel { border: 1px solid #d1d5db; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; background: #ffffff; }
+      .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+      .meta { color: #4b5563; font-size: 0.95rem; }
+      .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.75rem; }
+      .chip { display: inline-block; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.8rem; background: #ecfeff; color: #155e75; }
+      .link-line { margin-top: 0.9rem; }
+    </style>
+  </head>
+  <body>
+    <p><a href="/">返回上传页</a></p>
+    <div class="panel">
+      <h1>规则说明</h1>
+      <p class="meta">这里列出当前支持的文种、自动化覆盖范围和可检查规则数量，方便起草人和审核人理解系统“为什么报”。</p>
+    </div>
+    <div class="grid">
+      ${cards_html}
+    </div>
+  </body>
+  </html>

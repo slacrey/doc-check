@@ -27,7 +27,7 @@ def test_annotated_docx_output_matches_summary_report(tmp_path):
 
     annotated = Document(output_path)
 
-    assert report.total_findings == 9
+    assert report.total_findings == 17
     assert len(annotated.comments) == result.commented_count
     assert result.commented_count == sum(1 for entry in report.entries if entry.target.value == "commentable")
     assert result.summary_only_count == sum(1 for entry in report.entries if entry.target.value == "summary_only")

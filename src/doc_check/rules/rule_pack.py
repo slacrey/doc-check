@@ -9,6 +9,12 @@ from doc_check.domain.rules import (
     BannedTermRule,
     FindingDisposition,
     FindingSeverity,
+    LayoutRule,
+    ParagraphMetricKind,
+    ParagraphMetricRule,
+    ParagraphPatternMode,
+    ParagraphPatternRule,
+    ParagraphSignalRule,
     PreferredTermRule,
     RequiredHeadingRule,
     RuleManifest,
@@ -16,6 +22,7 @@ from doc_check.domain.rules import (
     StoryTextRule,
     StructureRules,
     StyleRule,
+    StyleRuleScope,
     TocRule,
 )
 
@@ -72,19 +79,86 @@ def load_rule_pack(base_dir: str | Path) -> RulePack:
             )
             for item in structure_data.get("story_text_rules", [])
         ),
+        paragraph_pattern_rules=tuple(
+            ParagraphPatternRule(
+                rule_id=_required_str(item, "rule_id"),
+                pattern=_required_str(item, "pattern"),
+                mode=_parse_paragraph_pattern_mode(item.get("mode", "require_any")),
+                severity=_parse_severity(item.get("severity", "warning")),
+                disposition=_parse_disposition(item.get("disposition", "mandatory")),
+                message=_required_str(item, "message"),
+                suggestion=item.get("suggestion") or None,
+                first_n_paragraphs=(
+                    int(item["first_n_paragraphs"])
+                    if item.get("first_n_paragraphs") is not None
+                    else None
+                ),
+                last_n_paragraphs=(
+                    int(item["last_n_paragraphs"])
+                    if item.get("last_n_paragraphs") is not None
+                    else None
+                ),
+            )
+            for item in structure_data.get("paragraph_pattern_rules", [])
+        ),
+        paragraph_signal_rules=tuple(
+            ParagraphSignalRule(
+                rule_id=_required_str(item, "rule_id"),
+                patterns=tuple(str(pattern) for pattern in item.get("patterns", [])),
+                min_matches=int(item.get("min_matches", 1)),
+                severity=_parse_severity(item.get("severity", "warning")),
+                disposition=_parse_disposition(item.get("disposition", "mandatory")),
+                message=_required_str(item, "message"),
+                suggestion=item.get("suggestion") or None,
+                first_n_paragraphs=(
+                    int(item["first_n_paragraphs"])
+                    if item.get("first_n_paragraphs") is not None
+                    else None
+                ),
+                last_n_paragraphs=(
+                    int(item["last_n_paragraphs"])
+                    if item.get("last_n_paragraphs") is not None
+                    else None
+                ),
+            )
+            for item in structure_data.get("paragraph_signal_rules", [])
+        ),
+        paragraph_metric_rules=tuple(
+            ParagraphMetricRule(
+                rule_id=_required_str(item, "rule_id"),
+                kind=_parse_paragraph_metric_kind(item.get("kind", "text_length")),
+                max_value=int(item.get("max_value", 0)),
+                severity=_parse_severity(item.get("severity", "warning")),
+                disposition=_parse_disposition(item.get("disposition", "mandatory")),
+                message=_required_str(item, "message"),
+                suggestion=item.get("suggestion") or None,
+                pattern=item.get("pattern") or None,
+                first_n_paragraphs=(
+                    int(item["first_n_paragraphs"])
+                    if item.get("first_n_paragraphs") is not None
+                    else None
+                ),
+                last_n_paragraphs=(
+                    int(item["last_n_paragraphs"])
+                    if item.get("last_n_paragraphs") is not None
+                    else None
+                ),
+            )
+            for item in structure_data.get("paragraph_metric_rules", [])
+        ),
     )
 
-    style_rules = tuple(
-        StyleRule(
+    style_rules = tuple(_parse_style_rule(item) for item in style_data.get("paragraph_rules", []))
+    layout_rules = tuple(
+        LayoutRule(
             rule_id=_required_str(item, "rule_id"),
-            applies_to_style=_required_str(item, "applies_to_style"),
             field=_required_str(item, "field"),
             expected=item["expected"],
             severity=_parse_severity(item.get("severity", "error")),
             disposition=_parse_disposition(item.get("disposition", "mandatory")),
             message=_required_str(item, "message"),
         )
-        for item in style_data.get("paragraph_rules", [])
+        for item in style_data.get("section_rules", [])
     )
 
     preferred_terms = tuple(
@@ -115,6 +189,7 @@ def load_rule_pack(base_dir: str | Path) -> RulePack:
         base_dir=ruleset_dir,
         manifest=manifest,
         structure_rules=structure_rules,
+        layout_rules=layout_rules,
         style_rules=style_rules,
         preferred_terms=preferred_terms,
         banned_terms=banned_terms,
@@ -169,3 +244,43 @@ def _parse_disposition(raw_value: str) -> FindingDisposition:
         return FindingDisposition(str(raw_value).strip().lower())
     except ValueError as exc:
         raise RulePackError(f"Unsupported disposition: {raw_value}") from exc
+
+
+def _parse_style_scope(raw_value: str) -> StyleRuleScope:
+    try:
+        return StyleRuleScope(str(raw_value).strip().lower())
+    except ValueError as exc:
+        raise RulePackError(f"Unsupported style scope: {raw_value}") from exc
+
+
+def _parse_paragraph_pattern_mode(raw_value: str) -> ParagraphPatternMode:
+    try:
+        return ParagraphPatternMode(str(raw_value).strip().lower())
+    except ValueError as exc:
+        raise RulePackError(f"Unsupported paragraph pattern mode: {raw_value}") from exc
+
+
+def _parse_paragraph_metric_kind(raw_value: str) -> ParagraphMetricKind:
+    try:
+        return ParagraphMetricKind(str(raw_value).strip().lower())
+    except ValueError as exc:
+        raise RulePackError(f"Unsupported paragraph metric kind: {raw_value}") from exc
+
+
+def _parse_style_rule(item: dict[str, object]) -> StyleRule:
+    scope = _parse_style_scope(item.get("scope", "style_chain"))
+    applies_to_style = item.get("applies_to_style")
+    if scope is StyleRuleScope.STYLE_CHAIN:
+        applies_to_style = _required_str(item, "applies_to_style")
+
+    return StyleRule(
+        rule_id=_required_str(item, "rule_id"),
+        scope=scope,
+        field=_required_str(item, "field"),
+        expected=item["expected"],
+        severity=_parse_severity(item.get("severity", "error")),
+        disposition=_parse_disposition(item.get("disposition", "mandatory")),
+        message=_required_str(item, "message"),
+        applies_to_style=str(applies_to_style).strip() if applies_to_style else None,
+        min_text_length=int(item.get("min_text_length", 0)),
+    )

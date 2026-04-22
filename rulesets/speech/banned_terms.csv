@@ -1,0 +1,4 @@
+rule_id,term,severity,disposition,message,suggestion
+terminology.speech.banned.internet-yyds,YYDS,warning,suggestion,发言稿中不宜使用网络流行语“YYDS”。,建议改为正式、规范的书面表达。
+terminology.speech.banned.internet-perfect,绝绝子,warning,suggestion,发言稿中不宜使用网络流行语“绝绝子”。,建议改为正式、规范的书面表达。
+terminology.speech.banned.internet-explosive,炸裂,warning,suggestion,发言稿中不宜使用夸张化网络表达“炸裂”。,建议改为正式、客观的表述。

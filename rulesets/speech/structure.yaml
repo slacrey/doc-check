@@ -1,0 +1,102 @@
+{
+  "required_headings": [],
+  "story_text_rules": [],
+  "paragraph_pattern_rules": [
+    {
+      "rule_id": "structure.speech.title-keyword",
+      "pattern": "(讲话|发言|致辞|主持词)",
+      "mode": "require_any",
+      "first_n_paragraphs": 3,
+      "severity": "warning",
+      "disposition": "mandatory",
+      "message": "发言稿标题宜明确文种，如讲话、发言、致辞、主持词。",
+      "suggestion": "建议在标题中明确“讲话”“发言”“致辞”或“主持词”等文种。"
+    },
+    {
+      "rule_id": "structure.speech.salutation",
+      "pattern": "(同志们|各位领导|各位来宾|女士们|先生们)[：:]?",
+      "mode": "require_any",
+      "first_n_paragraphs": 5,
+      "severity": "warning",
+      "disposition": "mandatory",
+      "message": "发言稿前文宜包含称谓。",
+      "suggestion": "建议在开头补充“各位领导、同志们：”等称谓。"
+    },
+    {
+      "rule_id": "structure.speech.salutation-colon",
+      "pattern": "^(?:(?:各位领导|各位来宾|女士们|先生们|同志们)(?:[、，, ]|$)){1,4}$",
+      "mode": "forbid_any",
+      "first_n_paragraphs": 5,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "发言稿称谓后宜使用冒号收束。",
+      "suggestion": "建议将称谓写作“各位领导、同志们：”。"
+    },
+    {
+      "rule_id": "structure.speech.no-news-byline",
+      "pattern": "(来源[:：]|记者|通讯员|讯[,，])",
+      "mode": "forbid_any",
+      "first_n_paragraphs": 8,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "发言稿中不宜使用新闻稿式来源或记者表述。",
+      "suggestion": "建议删除“来源”“记者”“通讯员”“讯”等新闻稿式表述。"
+    },
+    {
+      "rule_id": "structure.speech.closing",
+      "pattern": "(谢谢大家|让我们|希望大家|以上是|最后)",
+      "mode": "require_any",
+      "last_n_paragraphs": 2,
+      "severity": "warning",
+      "disposition": "mandatory",
+      "message": "发言稿结尾宜有收束或号召性表达。",
+      "suggestion": "建议在结尾补充“谢谢大家”“让我们共同……”等收束语。"
+    },
+    {
+      "rule_id": "structure.speech.slogan-ending",
+      "pattern": "(?:[\\u4e00-\\u9fff]{4}[、，]){2,}[\\u4e00-\\u9fff]{4}[！!]",
+      "mode": "forbid_any",
+      "last_n_paragraphs": 2,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "发言稿结尾宜避免堆砌口号式四字短语。",
+      "suggestion": "建议用简洁明确的收束语替代连续口号式表述。"
+    },
+    {
+      "rule_id": "structure.speech.layering-cue",
+      "pattern": "(下面[，,].{0,8}(讲|谈).{0,8}[一二三四五六七八九十0-9]点|我讲[一二三四五六七八九十0-9]点意见|谈[一二三四五六七八九十0-9]点意见)",
+      "mode": "require_any",
+      "first_n_paragraphs": 8,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "发言稿主体前宜有层次提示语，帮助听众把握结构。",
+      "suggestion": "建议补充“下面，我讲三点意见”等层次提示语。"
+    },
+    {
+      "rule_id": "structure.speech.organization-voice",
+      "pattern": "(公司表示|公司指出|公司要求|公司强调|本公司)",
+      "mode": "forbid_any",
+      "first_n_paragraphs": 10,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "发言稿宜保持第一人称或集体口吻，不宜使用报道体组织口吻。",
+      "suggestion": "建议改为“我”“我们”或直接陈述讲话内容。"
+    }
+  ],
+  "paragraph_signal_rules": [
+    {
+      "rule_id": "structure.speech.first-person-voice",
+      "patterns": [
+        "我(讲|想|提|强调|认为)",
+        "我们(要|必须|将|应当|共同)",
+        "让我们"
+      ],
+      "min_matches": 1,
+      "first_n_paragraphs": 10,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "发言稿主体宜体现讲话人口吻，如“我讲三点意见”“我们要……”。",
+      "suggestion": "建议在主体部分加入更明确的讲话人口吻表达。"
+    }
+  ]
+}

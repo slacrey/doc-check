@@ -22,20 +22,5 @@
     "severity": "error",
     "disposition": "mandatory"
   },
-  "story_text_rules": [
-    {
-      "rule_id": "structure.header.expected-text",
-      "story_type": "header",
-      "expected_contains": "AEOS 文件页眉",
-      "severity": "warning",
-      "disposition": "mandatory"
-    },
-    {
-      "rule_id": "structure.footer.expected-text",
-      "story_type": "footer",
-      "expected_contains": "AEOS 文件页脚",
-      "severity": "warning",
-      "disposition": "mandatory"
-    }
-  ]
+  "story_text_rules": []
 }

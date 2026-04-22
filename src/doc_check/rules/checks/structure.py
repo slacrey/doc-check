@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import re
+
 from doc_check.domain.documents import StoryType
 from doc_check.domain.rules import (
+    ParagraphMetricKind,
+    ParagraphPatternMode,
     RuleFinding,
     RulePack,
     document_level_finding,
@@ -124,4 +128,141 @@ def run_structure_checks(snapshot: DocumentSnapshot, rule_pack: RulePack) -> lis
                 )
             )
 
+    text_paragraphs = [paragraph for paragraph in snapshot.main_story.paragraphs if paragraph.text.strip()]
+    for rule in rule_pack.structure_rules.paragraph_pattern_rules:
+        target_paragraphs = _select_target_paragraphs(
+            text_paragraphs,
+            first_n_paragraphs=rule.first_n_paragraphs,
+            last_n_paragraphs=rule.last_n_paragraphs,
+        )
+
+        if rule.mode is ParagraphPatternMode.REQUIRE_ANY:
+            matched = next(
+                (paragraph for paragraph in target_paragraphs if re.search(rule.pattern, paragraph.text)),
+                None,
+            )
+            if matched is None:
+                findings.append(
+                    document_level_finding(
+                        rule_pack=rule_pack,
+                        rule_id=rule.rule_id,
+                        category="structure",
+                        severity=rule.severity,
+                        disposition=rule.disposition,
+                        message=rule.message,
+                        suggestion=rule.suggestion,
+                    )
+                )
+            continue
+
+        for paragraph in target_paragraphs:
+            match = re.search(rule.pattern, paragraph.text)
+            if match is None:
+                continue
+
+            location = paragraph_location(
+                snapshot,
+                story_type=StoryType.MAIN,
+                paragraph_index=paragraph.paragraph_index,
+            )
+            findings.append(
+                RuleFinding(
+                    rule_id=rule.rule_id,
+                    ruleset_id=rule_pack.ruleset_id,
+                    ruleset_version=rule_pack.version,
+                    category="structure",
+                    severity=rule.severity,
+                    disposition=rule.disposition,
+                    message=rule.message,
+                    suggestion=rule.suggestion,
+                    evidence=match.group(0),
+                    location=location,
+                    location_label=location.label if location else "文档级",
+                )
+            )
+
+    for rule in rule_pack.structure_rules.paragraph_signal_rules:
+        target_paragraphs = _select_target_paragraphs(
+            text_paragraphs,
+            first_n_paragraphs=rule.first_n_paragraphs,
+            last_n_paragraphs=rule.last_n_paragraphs,
+        )
+        combined_text = "\n".join(paragraph.text for paragraph in target_paragraphs)
+        matched_patterns = [
+            pattern for pattern in rule.patterns if re.search(pattern, combined_text)
+        ]
+
+        if len(matched_patterns) >= rule.min_matches:
+            continue
+
+        findings.append(
+            document_level_finding(
+                rule_pack=rule_pack,
+                rule_id=rule.rule_id,
+                category="structure",
+                severity=rule.severity,
+                disposition=rule.disposition,
+                message=rule.message,
+                suggestion=rule.suggestion,
+                evidence=combined_text[:200] or None,
+            )
+        )
+
+    for rule in rule_pack.structure_rules.paragraph_metric_rules:
+        target_paragraphs = _select_target_paragraphs(
+            text_paragraphs,
+            first_n_paragraphs=rule.first_n_paragraphs,
+            last_n_paragraphs=rule.last_n_paragraphs,
+        )
+        for paragraph in target_paragraphs:
+            metric_value, evidence = _measure_paragraph_metric(paragraph.text, rule)
+            if metric_value <= rule.max_value:
+                continue
+
+            location = paragraph_location(
+                snapshot,
+                story_type=StoryType.MAIN,
+                paragraph_index=paragraph.paragraph_index,
+            )
+            findings.append(
+                RuleFinding(
+                    rule_id=rule.rule_id,
+                    ruleset_id=rule_pack.ruleset_id,
+                    ruleset_version=rule_pack.version,
+                    category="structure",
+                    severity=rule.severity,
+                    disposition=rule.disposition,
+                    message=rule.message,
+                    suggestion=rule.suggestion,
+                    evidence=evidence,
+                    location=location,
+                    location_label=location.label if location else "文档级",
+                )
+            )
+
     return findings
+
+
+def _select_target_paragraphs(
+    paragraphs,
+    *,
+    first_n_paragraphs: int | None,
+    last_n_paragraphs: int | None,
+):
+    target_paragraphs = list(paragraphs)
+    if first_n_paragraphs is not None:
+        target_paragraphs = target_paragraphs[:first_n_paragraphs]
+    if last_n_paragraphs is not None:
+        target_paragraphs = target_paragraphs[-last_n_paragraphs:]
+    return target_paragraphs
+
+
+def _measure_paragraph_metric(text: str, rule) -> tuple[int, str]:
+    if rule.kind is ParagraphMetricKind.TEXT_LENGTH:
+        return len(text.strip()), text.strip()
+
+    if rule.kind is ParagraphMetricKind.PATTERN_COUNT:
+        matches = re.findall(rule.pattern or "", text)
+        return len(matches), f"{text.strip()} (命中 {len(matches)} 次)"
+
+    raise ValueError(f"Unsupported paragraph metric kind: {rule.kind}")

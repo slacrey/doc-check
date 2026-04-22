@@ -1,0 +1,13 @@
+{
+  "ruleset_id": "speech",
+  "version": "2026.05",
+  "name": "发言稿检验规则",
+  "document_type": "发言稿",
+  "punctuation_rules": {
+    "detect_ascii_comma_in_cjk": true,
+    "detect_mixed_commas": true,
+    "detect_ascii_colon_in_cjk": true,
+    "detect_ascii_semicolon_in_cjk": true,
+    "detect_ascii_parentheses_in_cjk": true
+  }
+}

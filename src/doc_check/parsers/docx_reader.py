@@ -17,6 +17,7 @@ from doc_check.domain.documents import (
     ParagraphFormatSnapshot,
     ParagraphNode,
     RunSnapshot,
+    SectionLayoutSnapshot,
     StorySnapshot,
     StoryType,
     TocEntry,
@@ -50,6 +51,10 @@ def read_docx_snapshot(path: str | Path) -> DocumentSnapshot:
         _read_header_or_footer_story(section.footer, story_type=StoryType.FOOTER, section_index=index)
         for index, section in enumerate(document.sections)
     )
+    sections = tuple(
+        _build_section_layout_snapshot(section, section_index=index)
+        for index, section in enumerate(document.sections)
+    )
     toc_entries = _extract_toc_entries(main_story)
 
     snapshot = DocumentSnapshot(
@@ -57,6 +62,7 @@ def read_docx_snapshot(path: str | Path) -> DocumentSnapshot:
         main_story=main_story,
         headers=headers,
         footers=footers,
+        sections=sections,
         toc_entries=toc_entries,
     )
     location_index = build_location_index(snapshot)
@@ -200,6 +206,18 @@ def _build_paragraph_format_snapshot(paragraph: Paragraph) -> ParagraphFormatSna
     )
 
 
+def _build_section_layout_snapshot(section, *, section_index: int) -> SectionLayoutSnapshot:
+    return SectionLayoutSnapshot(
+        section_index=section_index,
+        page_width_mm=_length_to_mm(section.page_width),
+        page_height_mm=_length_to_mm(section.page_height),
+        top_margin_mm=_length_to_mm(section.top_margin),
+        bottom_margin_mm=_length_to_mm(section.bottom_margin),
+        left_margin_mm=_length_to_mm(section.left_margin),
+        right_margin_mm=_length_to_mm(section.right_margin),
+    )
+
+
 def _resolve_paragraph_format_value(paragraph: Paragraph, attr: str):
     value = getattr(paragraph.paragraph_format, attr)
     if value is not None:
@@ -319,6 +337,14 @@ def _length_to_points(value) -> float | None:
         return None
     if isinstance(value, Length):
         return float(value.pt)
+    return None
+
+
+def _length_to_mm(value) -> float | None:
+    if value is None:
+        return None
+    if isinstance(value, Length):
+        return float(value.mm)
     return None
 
 

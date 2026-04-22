@@ -24,7 +24,7 @@ def test_review_service_processes_artifact_and_persists_outputs(tmp_path):
             content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             payload=fixture_paths["format_errors"].read_bytes(),
             ruleset_id="aeos",
-            ruleset_version="2026.04",
+            ruleset_version="2026.05",
             user=UserContext.local("tester"),
         )
     )
@@ -38,8 +38,8 @@ def test_review_service_processes_artifact_and_persists_outputs(tmp_path):
     assert completed.summary_path is not None and completed.summary_path.exists()
     assert (artifact.storage_path.parent / "findings.json").exists()
     assert (artifact.storage_path.parent / "review_states.json").exists()
-    assert session.summary_report.total_findings == 9
-    assert session.pending_count == 9
+    assert session.summary_report.total_findings == 17
+    assert session.pending_count == 17
 
 
 def test_review_service_updates_finding_status_and_reduces_pending_count(tmp_path):
@@ -56,7 +56,7 @@ def test_review_service_updates_finding_status_and_reduces_pending_count(tmp_pat
             content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             payload=fixture_paths["format_errors"].read_bytes(),
             ruleset_id="aeos",
-            ruleset_version="2026.04",
+            ruleset_version="2026.05",
             user=UserContext.local("tester"),
         )
     )

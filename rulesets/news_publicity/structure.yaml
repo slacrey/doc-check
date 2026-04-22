@@ -1,0 +1,105 @@
+{
+  "required_headings": [],
+  "story_text_rules": [],
+  "paragraph_pattern_rules": [
+    {
+      "rule_id": "structure.news.source-or-date",
+      "pattern": "(来源[:：]|通讯员|记者|[0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日)",
+      "mode": "require_any",
+      "first_n_paragraphs": 5,
+      "severity": "warning",
+      "disposition": "mandatory",
+      "message": "新闻宣传稿前文宜明确来源、署名或日期。",
+      "suggestion": "建议在前5段内补充来源、记者/通讯员署名或明确日期。"
+    },
+    {
+      "rule_id": "structure.news.title-no-ending-punctuation",
+      "pattern": "[。！？；：:]$",
+      "mode": "forbid_any",
+      "first_n_paragraphs": 1,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "新闻宣传稿标题通常不以句末标点结尾。",
+      "suggestion": "建议去掉标题末尾的句末标点。"
+    },
+    {
+      "rule_id": "structure.news.date-format",
+      "pattern": "(\\b[0-9]{4}[-/.][0-9]{1,2}[-/.][0-9]{1,2}\\b|[0-9]{1,2}月[0-9]{1,2}号)",
+      "mode": "forbid_any",
+      "first_n_paragraphs": 8,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "新闻宣传稿中的日期宜统一使用规范书面写法。",
+      "suggestion": "建议统一写作“2026年4月22日”这类书面日期格式。"
+    },
+    {
+      "rule_id": "structure.news.colloquial-adverb",
+      "pattern": "(非常|特别|十分|超级).{0,4}(震撼|火爆|给力|吸睛|惊艳)",
+      "mode": "forbid_any",
+      "first_n_paragraphs": 12,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "新闻宣传稿中宜避免口语化程度副词与夸张搭配。",
+      "suggestion": "建议改为客观、平实的事实描述。"
+    },
+    {
+      "rule_id": "structure.news.title-overclaim",
+      "pattern": "(史上最|最强|震惊|爆火|刷爆|引爆全网|必须看|不看后悔)",
+      "mode": "forbid_any",
+      "first_n_paragraphs": 1,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "新闻宣传稿标题宜避免夸张化、标题党表述。",
+      "suggestion": "建议改为事实导向的标题，避免“史上最”“最强”等夸张词。"
+    },
+    {
+      "rule_id": "structure.news.absolute-language",
+      "pattern": "(绝对安全|零风险|百分之百|100%)",
+      "mode": "forbid_any",
+      "first_n_paragraphs": 12,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "新闻宣传稿中宜避免缺乏依据的绝对化表述。",
+      "suggestion": "建议改为可核实、可量化的客观表述。"
+    }
+  ],
+  "paragraph_signal_rules": [
+    {
+      "rule_id": "structure.news.lead-5w1h-lite",
+      "patterns": [
+        "[0-9]{4}年[0-9]{1,2}月[0-9]{1,2}日",
+        "(公司|集团|部门|单位|项目|会议|活动|培训)",
+        "(召开|举办|开展|发布|启动|举行|推进|调研|检查|慰问|签约|部署|通报|组织)"
+      ],
+      "min_matches": 3,
+      "first_n_paragraphs": 3,
+      "severity": "warning",
+      "disposition": "mandatory",
+      "message": "新闻宣传稿导语宜尽量交代时间、主体、动作等核心事实。",
+      "suggestion": "建议在前3段内补足时间、主体和动作要素，向 5W1H 靠拢。"
+    }
+  ],
+  "paragraph_metric_rules": [
+    {
+      "rule_id": "structure.news.title-length",
+      "kind": "text_length",
+      "max_value": 20,
+      "first_n_paragraphs": 1,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "新闻宣传稿标题宜简洁凝练，避免过长。",
+      "suggestion": "建议将标题压缩到 20 字以内。"
+    },
+    {
+      "rule_id": "structure.news.title-exclamation-count",
+      "kind": "pattern_count",
+      "pattern": "[!！]",
+      "max_value": 0,
+      "first_n_paragraphs": 1,
+      "severity": "warning",
+      "disposition": "suggestion",
+      "message": "新闻宣传稿标题不宜使用感叹号渲染情绪。",
+      "suggestion": "建议删除标题中的感叹号，保持客观平实。"
+    }
+  ]
+}
